@@ -68,7 +68,7 @@ while getopts :d:c: arg; do case ${arg} in
   ?) exerr $usage;;
 esac; done; shift $(( ${OPTIND} - 1 ))
 
-[ -d "${the_dropdir}" ] || exnerr 501 "Can't access drop directory"
+[ -d "${the_dropdir}" ] || exnerr 500 "Can't access drop directory"
 
 # Check for attachment directory.
 # If it is not there, we got nothing to do
@@ -95,10 +95,10 @@ if [ "${the_jdispatcher_dir}" ]; then
 
   # If we can not allocate a dispatcher here, return an error
   # TODO: report, what went wrong, maybe wait
-  [ "${my_dispatcher}" ] || exnerr 502 "No remote cleanser available"
+  [ "${my_dispatcher}" ] || exnerr 503 "Temporary: No remote cleanser available"
 
   read cleanser_ippport < "${my_dispatcher}"/ip
-  [ "${cleanser_ippport}" ] || exnerr 503 "Cleanser config error"
+  [ "${cleanser_ippport}" ] || exnerr 500 "Cleanser config error"
 
   # Setup cleanser ip and port
   the_cleanser=${cleanser_ippport%%:*}
@@ -106,7 +106,7 @@ if [ "${the_jdispatcher_dir}" ]; then
 
   # If we were asked to use jdispatch but can not deduct how
   # to connect, return an error
-  [ "${the_cleanser}" ] || exnerr 503 "Cleanser config error"
+  [ "${the_cleanser}" ] || exnerr 500 "Cleanser config error"
 
   printf "201 Acquired remote cleanser: %s\n\nCopying data.\n" "${the_cleanser}" > "${the_dropdir}"/status
 fi
